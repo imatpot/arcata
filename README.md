@@ -6,6 +6,8 @@ It runs Warframe in a Debian container using [Proton](https://github.com/ValveSo
 This way, the servers can be deployed on any device capable of running OCI containers, regardless of operating system.
 It also includes a simplified configuration setup to easily spin up multiple instances and game modes.
 
+Also consider playing Lunaro with us at https://lunaro.wf/discord
+
 > [!NOTE]
 > Arcata is in no way affiliated with Digital Extremes or Warframe.
 
