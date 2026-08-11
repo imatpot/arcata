@@ -87,6 +87,33 @@ I take no responsibility for any of your EULA violations, it is your decision to
 
 If you do not want to auto-accept the EULA, you will have to connect to the container using VNC and manually click the `I AGREE` button on first startup and any time the EULA updates in the future.
 
+## How it works
+
+Here's a rough rundown on what the container does, assuming EULA auto-accept is on.
+Most of these run on every startup for simplicity's sake, since they're idempotent anyway.
+
+1. Starts the VNC server for observability and troubleshooting
+
+1. Downloads and sets up Protn and UMU with proper configuration
+
+1. Downloads the standalone Warframe launcher
+
+1. Manually set the target installation directory in the registry to avoid a file picker from popping up
+
+1. Start the launcher to let it download the EULA, then kill the process
+
+1. Hash `EULA_en.rtf` and write it to the registry, tricking the launcher into thinking EULA are accepted
+
+1. Generate `DS.cfg`, `EE.cfg`, and `Arcata.cfg` based on `arcata.yaml`
+
+1. Runs `umu-run path/to/Launcher.exe -headless -dedicated -dscfg:"path/to/Arcata.cfg"`
+
+Since it uses `Launcher.exe` rather than running `Warframe.x64.exe` directly, the servers *should* auto restart themselves when a new Warframe build drops.
+I have however not tested this.
+
+If anything goes wrong, the containers simply runs `tail -d /dev/null` to keep it open for troubleshooting via VNC.
+It's not ideal, but it works for now.
+
 ## Roadmap
 
 Arcata is in its early stages, and there's at least a few more things I'd like to implement.
@@ -94,6 +121,7 @@ Arcata is in its early stages, and there's at least a few more things I'd like t
 - Hosting an image on GHCR
 - Graceful shutdown when stopping the container (essentially pressing Q in the server windows)
 - Healthchecks for the container
+- Ensure container auto-restart (e.g. on Warframe updates) works
 - Sync with https://conclave.gg (message me if you know anything about this)
 
 ## Contributing
