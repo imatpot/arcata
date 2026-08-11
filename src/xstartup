@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+# Used to keep a session alive so Xvnc doesn't kill our display
+exec tail -f /dev/null
+
