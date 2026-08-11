@@ -16,6 +16,7 @@ services:
       - arcata:127.0.0.1
 
     environment:
+      TZ: Europe/Zurich
       AUTO_ACCEPT_EULA: ${AUTO_ACCEPT_EULA:-0} # Please check README.md
       VNC_PASSWORD: ${VNC_PASSWORD:-lunaro}
       VNC_PORT: ${VNC_PORT:-5900}
