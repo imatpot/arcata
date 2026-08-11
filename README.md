@@ -22,7 +22,7 @@ I recommend running the containers in Host-Network mode and enable UPnP on your 
 Otherwise, you can manually forward your server ports, more details on that below.
 Make sure you create the two directories bound to `~/.wine/pfx` and `~/.local/share/Steam/compatibilitytools.d` in you bind them to your host to avoid permission errors; no special setup should be required when using Docker volumes.
 
-You'll need around 50 Gigs of free storage, as the container requires a full Warframe installation.
+You'll need around 50 Gigabytes of free storage and anywhere from 500 to 800 Megabytes of RAM per instance, as the container requires a full Warframe installation.
 Dont worry though, it will do essentially everything for you, all you need to do is wait awhile during the first time.
 
 You'll also need to mount an `arcata.yaml` into `/opt/arcata/arcata.yaml` to configure the servers you want to run, as described below.
