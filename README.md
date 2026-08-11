@@ -37,9 +37,9 @@ The file is fairly straight forward and simplifies the setup described on the [W
 A typical `arcata.yaml` will look something like this:
 
 ```yaml
-# Setting this will attribute your account to the servers.
+# Setting this will attribute your account to the servers, defaults to no email at all (anonymous hosting).
 # This way, they might eventually end up on https://api.warframe.com/cdn/dedServerStats.php
-# Leave empty to host anonymously (which is the default when unset)
+# Leave empty to host anonymously (default)
 email: tenno@warframe.com
 
 # This list contains your seperate dedicated server settings
@@ -71,6 +71,17 @@ servers:
       useAlternativePVPMode: 1
       matchmakingRegionOverride: NORTH_AMERICA
 ```
+
+As seen in `CephalonCaptureForNoobs`, you can manually set the port on which a server should run.
+This only works if you have 1 instance!
+There is no way (using the official way to configure) to use the same config on multiple ports (for multiple instances) without duplicating it.
+I might add something for that in the future.
+
+If no port is set, the server decides on a port by itself.
+This is why `network_mode: host` is recommended, as it will automatically open the port on the host and forward it when needed.
+[UPnP](https://en.wikipedia.org/wiki/Universal_Plug_and_Play) should be enabled on your router to allow Warframe to request said ports to open on your router while the server is active.
+This is not a security risk and standard practice in most online games with peer-to-peer connectivity.
+It is usually enabled on most household routers, but you can make sure by looking up how to enable it for your specific router; just look up "<your router model> upnp" online and you'll eventually figure it out ;)
 
 For completeness' sake, here's also a list of useful environment variables:
 
