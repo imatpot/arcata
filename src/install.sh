@@ -17,8 +17,8 @@ umu-run wineboot -i
 #
 # This is where the fun begins!
 
-if [ -z "$(ls -A "${WARFRAME_DIR}" 2>/dev/null)" ]; then
-    log "No Warframe install found in ${WARFRAME_DIR}, installing"
+if [ ! -f "${LAUNCHER}" ]; then
+    log "Launcher not found, extracting bootstrap"
 
     wget -O /tmp/Warframe.msi https://content.warframe.com/dl/Warframe.msi
 
@@ -26,9 +26,9 @@ if [ -z "$(ls -A "${WARFRAME_DIR}" 2>/dev/null)" ]; then
     umu-run msiexec /a 'Z:\tmp\Warframe.msi' /qn TARGETDIR='C:\wf'
 
     # Move the extracted files to the correct location
-    mkdir -p "${WARFRAME_DIR}"
+    mkdir -p "${BOOTSTRAP_DIR}"
     shopt -s dotglob
-    mv "${WINEPREFIX}/drive_c/wf/LocalAppDataFolder/Warframe/"* "${WARFRAME_DIR}/"
+    mv "${WINEPREFIX}/drive_c/wf/LocalAppDataFolder/Warframe/"* "${BOOTSTRAP_DIR}/"
     shopt -u dotglob
 
     rm -rf "${WINEPREFIX}/drive_c/wf"
@@ -47,7 +47,7 @@ fi
 log "Setting installation directory"
 umu-run \
     reg add 'HKEY_CURRENT_USER\Software\Digital Extremes\Warframe\Launcher' \
-    /v DownloadDir /t REG_SZ /d 'C:\Program Files\Warframe\Downloaded' /f
+    /v DownloadDir /t REG_SZ /d 'C:\users\steamuser\AppData\Local\Warframe\Downloaded' /f
 
 # INSTALLATION STEP 3: Accept the EULA
 #
@@ -122,8 +122,13 @@ if [ "${AUTO_ACCEPT_EULA}" = "1" ] && [ -f "${EULA}" ]; then
         /v ReadEula /t REG_SZ /d "${EULA_HASH}" /f
 fi
 
-# The launcher is now installed.
-# On its subsequent starts, both headless and not, it will start downloading the game files!
+# Clean up the bootstrap once the launcher has been installed to AppData.
+# On AUTO_ACCEPT_EULA=0 the game downloads during the manual VNC session, so this runs on the next container start rather than immediately.
+
+if [ -f "${LAUNCHER}" ] && [ -d "${BOOTSTRAP_DIR}" ]; then
+    log "Cleaning up bootstrap directory"
+    rm -rf "${BOOTSTRAP_DIR}"
+fi
 
 log "${LAUNCHER} is installed and ready for Conclave"
 

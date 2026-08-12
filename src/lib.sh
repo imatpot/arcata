@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
 # This is where we run the initial launcher
-WARFRAME_DIR="${WINEPREFIX}/drive_c/Program Files/Warframe"
-BOOTSTRAP_LAUNCHER="${WARFRAME_DIR}/Downloaded/Public/Tools/Launcher.exe"
-EULA="${WARFRAME_DIR}/Downloaded/Public/Lotus/Language/EULA_en.rtf"
+BOOTSTRAP_DIR="${WINEPREFIX}/drive_c/WarframeBootstrapLauncher"
+BOOTSTRAP_LAUNCHER="${BOOTSTRAP_DIR}/Downloaded/Public/Tools/Launcher.exe"
+EULA="${APPDATA_DIR}/Downloaded/Public/Lotus/Language/EULA_en.rtf"
 
 # This is where the launcher actually copies/installs itself to, and where the game
 # keeps its configs (EE.cfg/DS.cfg)
