@@ -22,13 +22,13 @@ if [ ! -f "${LAUNCHER}" ]; then
 
     wget -O /tmp/Warframe.msi https://content.warframe.com/dl/Warframe.msi
 
-    # We're using /a instead of /i so the launcher doesn't auto-open itself after installation
+    # We're using /a instead of /i so the launcher doesn't auto-open itself after installation.
+    # msiexec /a adds LocalAppDataFolder\Warframe\ in TARGETDIR, so we use a temp dir and move it to the right place afterwards.
     umu-run msiexec /a 'Z:\tmp\Warframe.msi' /qn TARGETDIR='C:\wf'
 
-    # Move the extracted files to the correct location
-    mkdir -p "${BOOTSTRAP_DIR}"
+    mkdir -p "${APPDATA_DIR}"
     shopt -s dotglob
-    mv "${WINEPREFIX}/drive_c/wf/LocalAppDataFolder/Warframe/"* "${BOOTSTRAP_DIR}/"
+    mv "${WINEPREFIX}/drive_c/wf/LocalAppDataFolder/Warframe/"* "${APPDATA_DIR}/"
     shopt -u dotglob
 
     rm -rf "${WINEPREFIX}/drive_c/wf"
@@ -77,7 +77,7 @@ fi
 if [ "${AUTO_ACCEPT_EULA}" = "1" ] && [ ! -f "${EULA}" ]; then
     log "Forcing the launcher to download the EULA"
 
-    (cd "$(dirname "${BOOTSTRAP_LAUNCHER}")" && umu-run "${BOOTSTRAP_LAUNCHER}") &
+    (cd "${LAUNCHER_DIR}" && umu-run "${LAUNCHER}") &
     LAUNCHER_PID=$!
 
     log "Waiting for EULA to appear"
@@ -122,13 +122,6 @@ if [ "${AUTO_ACCEPT_EULA}" = "1" ] && [ -f "${EULA}" ]; then
         /v ReadEula /t REG_SZ /d "${EULA_HASH}" /f
 fi
 
-# Clean up the bootstrap once the launcher has been installed to AppData.
-# On AUTO_ACCEPT_EULA=0 the game downloads during the manual VNC session, so this runs on the next container start rather than immediately.
-
-if [ -f "${LAUNCHER}" ] && [ -d "${BOOTSTRAP_DIR}" ]; then
-    log "Cleaning up bootstrap directory"
-    rm -rf "${BOOTSTRAP_DIR}"
-fi
 
 log "${LAUNCHER} is installed and ready for Conclave"
 
