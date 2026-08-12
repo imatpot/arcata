@@ -3,7 +3,8 @@ name: arcata
 services:
 
   arcata:
-    build: .
+    image: ghcr.io/imatpot/arcata:latest
+    build: . # Use this if you cloned the repo and want to build it locally
 
     hostname: arcata
     container_name: arcata

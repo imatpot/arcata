@@ -131,7 +131,6 @@ It's not ideal, but it works for now.
 
 Arcata is in its early stages, and there's at least a few more things I'd like to implement.
 
-- Hosting an image on GHCR
 - Graceful shutdown when stopping the container (essentially pressing Q in the server windows)
 - Healthchecks for the container
 - Ensure container auto-restart (e.g. on Warframe updates) works
