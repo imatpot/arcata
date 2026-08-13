@@ -64,13 +64,63 @@ if [ ! -f "${LAUNCHER}" ]; then
     exit 1
 fi
 
+graceful_shutdown() {
+    trap '' SIGTERM SIGINT
+    log "Received SIGTERM, gracefully stopping dedicated servers"
+
+    local windows
+    windows=$(xdotool search --name 'Retail Windows x64' 2>/dev/null || true)
+
+    if [ -n "${windows}" ]; then
+        local count
+        count=$(echo "${windows}" | wc -l)
+
+        log "Pressing 'Q' in ${count} Warframe window(s)"
+
+        while IFS= read -r wid; do
+            local wname
+            wname=$(xdotool getwindowname "${wid}" 2>/dev/null || echo "${wid}")
+            xdotool windowactivate --sync "${wid}" 2>/dev/null || true
+            if xdotool key q 2>/dev/null; then
+                log "Quitting ${wname}"
+            else
+                log "Failed to quit ${wname}"
+            fi
+        done <<< "${windows}"
+    else
+        log "No Warframe windows found, skipping pressing 'Q'"
+    fi
+
+    local i=600 # 600 seconds = 10 minutes should be plenty for all matches to conclude
+
+    while [ "${i}" -gt 0 ] && pgrep -f 'Warframe.x64.exe' > /dev/null 2>&1; do
+        sleep 1
+        (( i-- )) || true
+    done
+
+    if pgrep -f 'Warframe.x64.exe' > /dev/null 2>&1; then
+        log "Graceful shutdown timed out, killing all remaining processes"
+    else
+        log "Servers shut down gracefully"
+    fi
+
+    kill_warframe
+    exit 0
+}
+
+trap graceful_shutdown SIGTERM SIGINT
+
 log "Starting the dedicated servers"
 
-umu-run "${LAUNCHER}" -headless -dedicated -dscfg:"${ARCATA_CFG}"
+umu-run "${LAUNCHER}" -headless -dedicated -dscfg:"${ARCATA_CFG}" &
+LAUNCHER_PID="$!"
+
+wait "${LAUNCHER_PID}"
 STATUS="$?"
 
-# In case the launcher exits, we try to keep the container alive for debugging.
-
-log "Launcher exited with status ${STATUS}. Holding the container open for VNC."
-tail -f /dev/null
+if [ "${STATUS}" -ne 0 ]; then
+    log "${RED}FATAL${RESET}: Launcher exited with status code ${STATUS}"
+else
+    log "Launcher exited cleanly"
+fi
 

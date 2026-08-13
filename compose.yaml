@@ -9,12 +9,16 @@ services:
     hostname: arcata
     container_name: arcata
     restart: unless-stopped
-
     network_mode: host # Alternatively, manually forward your server ports; I personally like UPnP.
 
     # Required if using network_mode: host and a hostname, otherwise FQDN lookup fails in TigerVNC.
     extra_hosts:
       - arcata:127.0.0.1
+
+    # Required if you want to allow the instances to shut down gracefully.
+    # Gives the container 10 minutes to react to SIGTERM before it receives a SIGKILL.
+    # Should be plently of time for e.g. a fresh Lunaro match (7 ish minutes) and some shutdown time.
+    stop_grace_period: 10m
 
     environment:
       TZ: Europe/Zurich

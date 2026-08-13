@@ -8,9 +8,9 @@ set -o posix
 shopt -s extglob
 shopt -s extdebug
 
-#
-
 bash src/vnc.sh
 bash src/install.sh
-bash src/server.sh
+
+# exec replaces the foregound process so the script can intercept SIGTERM
+exec bash src/server.sh
 

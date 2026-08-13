@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
-# Used to keep a session alive so Xvnc doesn't kill our display
-exec tail -f /dev/null
+# Openbox is a very small window manager.
+# Running it leaves the display alive for VNC and also allows us to interact properly with the windows, e.g. to press 'Q' to gracefuly shut down.
+exec openbox
 

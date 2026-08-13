@@ -30,7 +30,8 @@ RUN ARCH=$(dpkg --print-architecture) \
         # VNC for troubleshooting
         tigervnc-standalone-server \
         tigervnc-tools \
-        # Interaction with windows (e.g. graceful shotdown using Q)
+        # Interaction with windows (e.g. graceful shutdown using Q)
+        openbox \
         xdotool \
         x11-utils \
         # Vulkan + lavapipe (rasterizer)
