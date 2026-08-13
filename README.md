@@ -131,10 +131,10 @@ It's not ideal, but it works for now.
 
 Arcata is in its early stages, and there's at least a few more things I'd like to implement.
 
-- Graceful shutdown when stopping the container (essentially pressing Q in the server windows)
 - Healthchecks for the container
 - Ensure container auto-restart (e.g. on Warframe updates) works
-- Sync with https://conclave.gg (message me if you know anything about this)
+- Sync with https://conclave.gg i.e. integration with MatNova's https://github.com/matrix224/WFData
+- Potental migration to something more sophisticated than shellscripts, mabye Nushell or even a "proper" binary, also to make it easier to implement the aforementioned integration (or others)
 
 ## Contributing
 
